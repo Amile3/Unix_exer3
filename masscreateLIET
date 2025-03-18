@@ -1,0 +1,35 @@
+#pasirasom reiksmes
+vardas="vu"
+skaicius=1000
+slaptazodis=""
+
+#fnkcija, kuri paraso vartotojui kaip teisingai parasyti /naudojimo intrukcija
+usage() {
+   echo "Uzrasyti sita forma: $0  --skaicius <vartotoju_skaicius> --pass <slaptazodis>"
+   exit 1
+}
+
+#argumentu skaitymas ir nustatymas
+while [[ "$#" -gt 0 ]]; do
+   case $1 in
+        --skaicius) skaicius="$2"; shift ;;
+        --pass) slaptazodis="$2"; shift;;
+        *) usage ;;
+   esac
+   shift
+done
+#paziurek ar taip parase slaptazodis
+if [ -z "$slaptazodis" ]; then
+   echo "KLAIDA: Slaptazodi reikia nurodyti su  --pas  parametru."
+   usage
+fi
+
+#sukuria vartotojus
+for ((i=0; i<skaicius; i++)); do
+   varto_numeris=$(printf "%03d" $i)
+   vartotojo_vardas="${vardas}${varto_numeris}"
+
+   sudo useradd -m -s /bin/bash "$vartotojo_vardas"
+
+   echo "Sukuriamas vartotojas: $vartotojo_vardas su slaptazodziu: $slaptazodis"
+done
